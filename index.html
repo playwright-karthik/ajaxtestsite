@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>A lot of buttons that make AJAX requests</h2>
+<button type="button" id="textrequests" onclick="loadDocs()">Make Text Requests</button>
+<button type="button" id="testrequests2" onclick="loadDocs2()">Make Text Requests 2</button>
+<button type="button" id="chunked" onclick="loadChunkedDocs()">Make Chunked Requests</button>
+<button type="button" id="images"  onclick="loadImageDocs()">Make Image Requests</button>
+<button type="button" id="40X" onclick="loadErrorCodeDocs()">Make 40X/50X requests</button>
+<button type="button" id="redirects" onclick="loadRedirectDocs()">Make redirect requests</button>
+<button type="button" id="headers" onclick="loadDocsWithCustomHeader()">Make request with custom response header</button>
+<button type="button" id="cross-sps" onclick="loadCrossOrigin()">Make request to cross origin site</button>
+
+<a id="sps" href="https://sqa.3genlabs.net/hawksyntheticpageserver/">SPS link</a>
+<a id="spsfile" href="https://sqa.3genlabs.net/hawksyntheticpageserver/Main.ashx?type=rawtext&linebreak=100&asciistart=111&asciiend=119&bytecount=200&random=false&redirect=0">SPS link</a>
+
+<p>
+INSTRUCTIONS:
+Open this file (index.html) in a text editor to change the requests that are created by the buttons. Create new buttons if you like.
+</p><p>
+The following are query parameters for affecting the request:
+</p><p>
+chunked - changes the request to chunked request
+<br/>contenttype - sets the "Content-type" header in the request response. Defaults to text/plain
+<br/>responsecode - sets the HTTP response code of the request response
+<br/>redirect - sets the "Location" header of the request response, forcing a 301 redirect
+<br/>cookie - causes the response to have a "set-cookie" header. subsequent requests should include the cookie in the request
+<p/>header - sets any custom <b>response</b> header value. Format: header=someheaderkey:someheadername
+
+
+
+<script>
+function loadDoc(url) {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", url);
+  xhttp.send();
+}
+
+function loadCrossOrigin() {
+  loadDoc("https://sqa.3genlabs.net/hawksyntheticpageserver/Main.ashx?type=rawtext&linebreak=100&asciistart=111&asciiend=119&bytecount=200&random=false&redirect=0")
+}
+
+function loadChunkedDocs() {
+  loadDoc("smallrequest.txt?chunked=1");
+  loadDoc("largerequest.txt?chunked=1");
+  loadDoc("largerequest.txt?chunked=1&contenttype=application/json")
+}
+
+function loadDocs(){
+  loadDoc("smallrequest.txt?contenttype=text/plain");
+  loadDoc("largerequest.txt?contenttype=text/plain");
+} 
+
+function loadDocs2() {
+  loadDoc("smallrequest.txt?contenttype=text/html");
+  loadDoc("largerequest.txt?contenttype=text/html");
+}
+
+function loadDocsWithCustomHeader() {
+  loadDoc("largerequest.txt?header=agent:rocks")
+}
+
+function loadImageDocs() {
+  loadDoc("smallrequest.txt?contenttype=image/png");
+  loadDoc("largerequest.txt?contenttype=image/png");
+}
+
+function loadErrorCodeDocs() {
+  loadDoc("largerequest.txt?responsecode=404");
+  loadDoc("largerequest.txt?responsecode=500");
+}
+
+function loadRedirectDocs() {
+  loadDoc("smallrequest.txt?redirect=http://localhost:8080/largerequest.txt?responsecode=404")
+  loadDoc("smallrequest.txt?redirect=https://sqa.3genlabs.net/hawksyntheticpageserver/Main.ashx")
+}
+
+</script>
+
+</body>
+</html>
+
+
